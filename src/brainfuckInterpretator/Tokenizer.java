@@ -8,7 +8,7 @@ public class Tokenizer {
 
     public ArrayList<String> getTokens(String code) {
         ArrayList<String> tokens = new ArrayList<>();
-        StringTokenizer tokenizer = new StringTokenizer(tokenTypes);
+        StringTokenizer tokenizer = new StringTokenizer(code, tokenTypes, true);
 
         while(tokenizer.hasMoreTokens())
             tokens.add(tokenizer.nextToken());

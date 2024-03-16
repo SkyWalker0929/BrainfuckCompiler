@@ -6,12 +6,16 @@ import java.util.ArrayList;
 
 public class CommandExecutor {
     private InputStreamReader reader = new InputStreamReader(System.in);
-    private ArrayList<Integer> tape = new ArrayList<>(30000);
+    private ArrayList<Integer> tape = new ArrayList<>();
     private int pointer = 0;
     private ArrayList<String> commands;
     private int i = 0;
 
     public void executeCommands(ArrayList<String> commands) throws IOException {
+        for(int i = 0; i < 30000; i++) {
+            tape.add(0);
+        }
+
         this.commands = commands;
         for(; i < commands.size(); i++) {
            execute(commands.get(i));
@@ -24,17 +28,20 @@ public class CommandExecutor {
             case "<" -> pointer--;
             case "+" -> tape.set(pointer, tape.get(pointer) + 1);
             case "-" -> tape.set(pointer, tape.get(pointer) - 1);
-            case "." -> System.out.print((char) (int) tape.get(pointer));
+            case "." -> System.out.print((char) tape.get(pointer).intValue());
             case "," -> tape.set(pointer, reader.read());
             case "[" -> {
-                while(true) {
-                    for(; i < commands.size(); i++) {
-                        if(!commands.get(pointer).equals("]"))
-                            execute(commands.get(i));
-                        else if(tape.get(pointer) == 0)
-                            break;
+                int startCycle = i;
+                    while(true) {
+                        i++;
+                        if (commands.get(i).equals("]")) {
+                            if(tape.get(pointer) == 0)
+                                break;
+                            i = startCycle;
+                            continue;
+                        }
+                        execute(commands.get(i));
                     }
-                }
             }
         }
     }
